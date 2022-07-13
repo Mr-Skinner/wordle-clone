@@ -22,7 +22,7 @@ function Home() {
     setSolution(wordsArray[Math.floor(Math.random() * wordsArray.length) + 1]);
   }, []);
 
-  console.log(solution);
+  //console.log(solution);
 
   const onSubmitToggle = (hideBtn: boolean, submitGuess?: Array<[]>) => {
     setCanSubmit(hideBtn);
