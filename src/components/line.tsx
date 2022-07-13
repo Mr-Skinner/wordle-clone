@@ -8,7 +8,7 @@ interface LineProps {
 }
 
 function Line({ onSubmitToggle, validation, isLineActive, lineIndex }: LineProps) {
-  const [currentGuess, setCurrentGuess] = useState(Array(5).fill(null));
+  const [currentGuess, setCurrentGuess] = useState<any>([null, null, null, null, null]);
   const [lineIsActive, setLineActive] = useState<boolean>(isLineActive ? true : false);
 
   const OnLetterInput = (letterInput: string, letterIndex: string) => {
@@ -46,7 +46,7 @@ function Line({ onSubmitToggle, validation, isLineActive, lineIndex }: LineProps
 
   return (
     <div className="rounded mx-md p-4 border-gray-100 flex gap-2">
-      {currentGuess.map((letter, index) => {
+      {currentGuess.map((letter: string, index: number) => {
         return (
           <div
             key={index}
