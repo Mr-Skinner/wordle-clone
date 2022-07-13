@@ -8,16 +8,13 @@ body {
 }
 
 .correct {
-  background-color: #00c70070 !important;
-  color: white !important;
+  @apply bg-green-500 text-white
 }
 
 .incorrect {
-  background-color: gray !important;
-  color: white !important;
+  @apply bg-gray-500 text-white
 }
 
 .almost {
-  background-color: #ffd262 !important;
-  color: white !important;
+  @apply bg-yellow-500 text-white
 }

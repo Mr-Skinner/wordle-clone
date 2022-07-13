@@ -33,27 +33,43 @@ function Home() {
 
   const onError = (msg: string) => {
     setErrorMessage(msg);
-    setTimeout(() => {setErrorMessage('')}, 2000);
+    setTimeout(() => {
+      setErrorMessage("");
+    }, 2000);
   };
 
-  const checkWord = (word: string) => {
-    fetch("https://api.dictionaryapi.dev/api/v2/entries/en/"+word)
-    .then(res =>res.json())
-    .then(res => {
-      if (res.title == 'No Definitions Found') {
-        onError("That's not a word!");
-      }
-      return
-    })
+  function checkWord(word: string): boolean {
+    let isValid = true;
+    fetch("https://api.dictionaryapi.dev/api/v2/entries/en/" + word)
+      .then((res) => res.json())
+      .then((res) => {
+        console.log(res)
+        if (res[0].title == "No Definitions Found") {
+          isValid = false;
+          onError("That's not a word!");
+        }
+      });
+    return isValid;
+  }
+
+  const refreshPage = () => {
+    window.location.reload();
   };
 
   const evaluateGuess = () => {
     let validation: any[] = [];
     let guessString = guess.join("");
 
+    // check dictionary
+    let isRealWord = checkWord(guessString);
+    console.log(isRealWord);
+    if (!isRealWord) {
+      return;
+    }
+
     if (!wordsArray.includes(guessString)) {
-      checkWord(guessString);
-      return
+      onError("That word isn't in our database, sorry!");
+      return;
     }
 
     for (let i = 0; i < solution.length; i++) {
@@ -77,12 +93,12 @@ function Home() {
 
     if (solution == guessString) {
       setGameState("WON");
-      return
+      return;
     }
 
-    if (solution !== guessString && activeLine > 3 ) {
+    if (solution !== guessString && activeLine > 3) {
       setGameState("LOST");
-      return
+      return;
     }
   };
 
@@ -102,6 +118,7 @@ function Home() {
             validation={config}
             onSubmitToggle={onSubmitToggle}
             isLineActive={isLineActive}
+            lineIndex={index}
           ></Line>
         );
       })}
@@ -114,17 +131,28 @@ function Home() {
       >
         Submit
       </button>
-      <div className="p-4" style={gameState == "LOST" ? {display: "block"} : {display: "none"}}>
+      <div
+        className="p-4"
+        style={gameState == "LOST" ? { display: "block" } : { display: "none" }}
+      >
         <p className="text-center">Bad luck!</p>
         <p>The solution was:</p>
         <p className="text-center">{solution}</p>
       </div>
-      <div className="p-4" style={gameState == "WON" ? {display: "block"} : {display: "none"}}>
+      <div
+        className="p-4"
+        style={gameState == "WON" ? { display: "block" } : { display: "none" }}
+      >
         <p className="text-center">You won!</p>
       </div>
-      <div className="p-4 text-red-500">
-        {errorMessage}
-      </div>
+      <button
+        onClick={refreshPage}
+        className="uppercase p-4 text-white bg-green-500 rounded"
+        style={gameState == "" ? { display: "none" } : { display: "block" }}
+      >
+        New word
+      </button>
+      <div className="p-4 text-red-500 text-center">{errorMessage}</div>
     </div>
   );
 }
