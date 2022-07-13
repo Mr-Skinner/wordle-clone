@@ -8,7 +8,7 @@ interface LineProps {
 }
 
 function Line({ onSubmitToggle, validation, isLineActive, lineIndex }: LineProps) {
-  const [currentGuess, setCurrentGuess] = useState(Array(5).fill(null));
+  const [currentGuess, setCurrentGuess] = useState(Array(6).fill(null));
   const [lineIsActive, setLineActive] = useState<boolean>(isLineActive ? true : false);
 
   const OnLetterInput = (letterInput: string, letterIndex: string) => {
