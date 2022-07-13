@@ -1,30 +1,71 @@
 import { useState } from "react";
 
 interface LineProps {
-  onSubmitToggle: (hideBtn: boolean) => any;
-  solution: string;
+  onSubmitToggle: (hideBtn: boolean, submitGuess?: any[]) => any;
+  validation: any[];
+  isLineActive: boolean;
 }
 
-function Line({ solution, onSubmitToggle }: LineProps) {
-  const [currentGuess, setCurrentGuess] = useState("");
-  const inputs = [null, null, null, null, null];
-  const evaluateGuess = (letterInput: string) => {
-    console.log(letterInput);
+function Line({ onSubmitToggle, validation, isLineActive }: LineProps) {
+  const [currentGuess, setCurrentGuess] = useState(Array(5).fill(null));
+  const [lineIsActive, setLineActive] = useState<boolean>(isLineActive ? true : false);
+
+  const OnLetterInput = (letterInput: string, letterIndex: string) => {
+    let guesses = currentGuess;
+    let realIndex: number = parseInt(letterIndex.split("_")[1]);
+
+    if (letterInput == "") {
+      // remove any current letter guess at that index
+      guesses[realIndex] = null;
+      onSubmitToggle(false);
+    }
+
     if (!letterInput.match("^[a-zA-Z]{1}$")) {
       return;
+    }
+
+    guesses[realIndex] = letterInput.toUpperCase();
+    setCurrentGuess(guesses);
+
+    console.log(guesses);
+    if (!guesses.includes(null) && guesses.length == 5) {
+      // we're ready to submit!
+      onSubmitToggle(true, currentGuess);
+    } else {
+      onSubmitToggle(false);
+      // move to next input if available
+      if (realIndex < 4) {
+        let nextInput = document.getElementById("letter_" + (realIndex + 1));
+        if (nextInput) {
+          nextInput.focus();
+        }
+      }
     }
   };
 
   return (
     <div className="rounded mx-md p-4 border-gray-100 flex gap-2">
-      {inputs.map(() => {
+      {currentGuess.map((letter, index) => {
         return (
-          <div className="bg-white rounded mx-md p-2 border-gray-100 shadow-sm align-middle text-center">
+          <div
+            key={index}
+            className={
+              "bg-white rounded mx-md p-2 border-gray-100 shadow-sm align-middle text-center " +
+              validation[index]
+            }
+          >
             <input
+              id={"letter_" + index}
               type="text"
-              className="w-12 text-center align-middle focus-within:outline-none uppercase"
+              disabled={isLineActive ? false : true}
+              className={
+                "w-12 text-center align-middle focus-within:outline-none uppercase bg-transparent"
+              }
               maxLength={1}
-              onKeyDown={(event: any) => evaluateGuess(event.key)}
+              size={1}
+              onInput={(event: any) =>
+                OnLetterInput(event.target.value, event.target.id)
+              }
             />
           </div>
         );

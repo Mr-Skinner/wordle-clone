@@ -6,3 +6,18 @@
 body {
   @apply text-slate-400 bg-gray-200 font-raleway;
 }
+
+.correct {
+  background-color: #00c70070 !important;
+  color: white !important;
+}
+
+.incorrect {
+  background-color: gray !important;
+  color: white !important;
+}
+
+.almost {
+  background-color: #ffd262 !important;
+  color: white !important;
+}
