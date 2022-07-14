@@ -18,6 +18,34 @@ function Home() {
     [null],
   ]);
 
+  const [keyboard, setKeyboard] = useState([
+    { letter: "A", validation: "" },
+    { letter: "B", validation: "" },
+    { letter: "C", validation: "" },
+    { letter: "D", validation: "" },
+    { letter: "E", validation: "" },
+    { letter: "F", validation: "" },
+    { letter: "G", validation: "" },
+    { letter: "H", validation: "" },
+    { letter: "I", validation: "" },
+    { letter: "J", validation: "" },
+    { letter: "K", validation: "" },
+    { letter: "L", validation: "" },
+    { letter: "M", validation: "" },
+    { letter: "O", validation: "" },
+    { letter: "P", validation: "" },
+    { letter: "Q", validation: "" },
+    { letter: "R", validation: "" },
+    { letter: "S", validation: "" },
+    { letter: "T", validation: "" },
+    { letter: "U", validation: "" },
+    { letter: "V", validation: "" },
+    { letter: "W", validation: "" },
+    { letter: "X", validation: "" },
+    { letter: "Y", validation: "" },
+    { letter: "Z", validation: "" },
+  ]);
+
   useEffect(() => {
     setSolution(wordsArray[Math.floor(Math.random() * wordsArray.length) + 1]);
   }, []);
@@ -43,7 +71,7 @@ function Home() {
     fetch("https://api.dictionaryapi.dev/api/v2/entries/en/" + word)
       .then((res) => res.json())
       .then((res) => {
-        console.log(res)
+        //console.log(res);
         if (res) {
           if (res.title == "No Definitions Found") {
             isValid = false;
@@ -83,6 +111,17 @@ function Home() {
       if (solution[i] == guess[i]) {
         isCorrect = "correct";
       }
+
+      let alphabet = keyboard;
+      let filteredLetter = alphabet.find((obj) => {
+        return obj.letter == guess[i];
+      });
+
+      if (filteredLetter) {
+        filteredLetter.validation = isCorrect;
+      }
+      setKeyboard(alphabet);
+
       validation.push(isCorrect);
     }
     let currentConfig: any[] = validateConfig;
@@ -107,64 +146,79 @@ function Home() {
     let nextLineInput = document.getElementById(
       "line_" + (activeLine + 1) + "_letter_0"
     );
-    console.log(nextLineInput);
+    //console.log(nextLineInput);
     if (nextLineInput) {
       nextLineInput.focus();
     }
   };
 
   return (
-    <div className="flex flex-col max-w-screen-md items-center m-auto p-4 text-5xl text-slate-700">
-      <hr className="p-4" />
-      <h1>Wordle!</h1>
-      <hr className="p-4" />
-      {validateConfig.map((config: [], index: number) => {
-        let isLineActive = false;
-        if (index == activeLine) {
-          isLineActive = true;
-        }
-        return (
-          <Line
-            key={"line_+" + index}
-            validation={config}
-            onSubmitToggle={onSubmitToggle}
-            evaluateGuess={evaluateGuess}
-            isLineActive={isLineActive}
-            lineIndex={index}
-          ></Line>
-        );
-      })}
+    <div className="flex max-w-screen-md items-center justify-evenly m-auto">
+      <div className="flex max-w-xs flex-wrap justify-center absolute left-1/4">
+      {keyboard.map((abc: {letter: string, validation: string}, index: number) => {
+          return (
+            <div className={"bg-white rounded text-center w-5 m-1 " + abc.validation}>
+              {abc.letter}
+            </div>
+          );
+        })}
+      </div>
+      <div className="flex flex-col max-w-screen-md items-center p-4 text-5xl text-slate-700">
+        <hr className="p-4" />
+        <h1>Wordle!</h1>
+        <hr className="p-4" />
+        {validateConfig.map((config: [], index: number) => {
+          let isLineActive = false;
+          if (index == activeLine) {
+            isLineActive = true;
+          }
+          return (
+            <Line
+              key={"line_+" + index}
+              validation={config}
+              onSubmitToggle={onSubmitToggle}
+              evaluateGuess={evaluateGuess}
+              isLineActive={isLineActive}
+              lineIndex={index}
+            ></Line>
+          );
+        })}
 
-      <hr className="p-4" />
-      <button
-        onClick={evaluateGuess}
-        className="uppercase p-4 text-white bg-blue-500 rounded"
-        style={canSubmit ? { display: "block" } : { display: "none" }}
-      >
-        Submit
-      </button>
-      <div
-        className="p-4"
-        style={gameState == "LOST" ? { display: "block" } : { display: "none" }}
-      >
-        <p className="text-center">Bad luck!</p>
-        <p>The solution was:</p>
-        <p className="text-center">{solution}</p>
+        <hr className="p-4" />
+        <button
+          onClick={evaluateGuess}
+          className="uppercase p-4 text-white bg-blue-500 rounded"
+          style={canSubmit ? { display: "block" } : { display: "none" }}
+        >
+          Submit
+        </button>
+        <div
+          className="p-4"
+          style={
+            gameState == "LOST" ? { display: "block" } : { display: "none" }
+          }
+        >
+          <p className="text-center">Bad luck!</p>
+          <p>The solution was:</p>
+          <p className="text-center">{solution}</p>
+        </div>
+        <div
+          className="p-4"
+          style={
+            gameState == "WON" ? { display: "block" } : { display: "none" }
+          }
+        >
+          <p className="text-center">You won!</p>
+        </div>
+        <button
+          onClick={refreshPage}
+          className="uppercase p-4 text-white bg-green-500 rounded"
+          style={gameState == "" ? { display: "none" } : { display: "block" }}
+        >
+          New word
+        </button>
+        <div className="p-4 text-red-500 text-center">{errorMessage}</div>
       </div>
-      <div
-        className="p-4"
-        style={gameState == "WON" ? { display: "block" } : { display: "none" }}
-      >
-        <p className="text-center">You won!</p>
-      </div>
-      <button
-        onClick={refreshPage}
-        className="uppercase p-4 text-white bg-green-500 rounded"
-        style={gameState == "" ? { display: "none" } : { display: "block" }}
-      >
-        New word
-      </button>
-      <div className="p-4 text-red-500 text-center">{errorMessage}</div>
     </div>
   );
 }
