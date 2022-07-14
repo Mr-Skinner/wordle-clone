@@ -107,7 +107,7 @@ function Line({
   };
 
   return (
-    <div className="rounded mx-md p-4 border-gray-100 flex gap-2">
+    <div className="rounded mx-md p-2 border-gray-100 flex gap-2">
       {currentGuess.map((letter: string, index: number) => {
         return (
           <div

@@ -153,72 +153,74 @@ function Home() {
   };
 
   return (
-    <div className="flex max-w-screen-md items-center justify-evenly m-auto">
-      <div className="flex max-w-xs flex-wrap justify-center absolute left-1/4">
-      {keyboard.map((abc: {letter: string, validation: string}, index: number) => {
-          return (
-            <div key={abc.letter + '__' + index} className={"bg-white rounded text-center w-5 m-1 " + abc.validation}>
-              {abc.letter}
-            </div>
-          );
-        })}
-      </div>
-      <div className="flex flex-col max-w-screen-md items-center p-4 text-5xl text-slate-700">
-        <hr className="p-4" />
-        <h1>Wordle!</h1>
-        <hr className="p-4" />
-        {validateConfig.map((config: [], index: number) => {
-          let isLineActive = false;
-          if (index == activeLine) {
-            isLineActive = true;
-          }
-          return (
-            <Line
-              key={"line_+" + index}
-              validation={config}
-              onSubmitToggle={onSubmitToggle}
-              evaluateGuess={evaluateGuess}
-              isLineActive={isLineActive}
-              lineIndex={index}
-            ></Line>
-          );
-        })}
+    <div className="flex flex-col max-w-screen-md items-center p-4 text-5xl text-slate-700 m-auto">
+      <hr className="p-1" />
+      <h1>Wordle!</h1>
+      <hr className="p-1" />
+      {validateConfig.map((config: [], index: number) => {
+        let isLineActive = false;
+        if (index == activeLine) {
+          isLineActive = true;
+        }
+        return (
+          <Line
+            key={"line_+" + index}
+            validation={config}
+            onSubmitToggle={onSubmitToggle}
+            evaluateGuess={evaluateGuess}
+            isLineActive={isLineActive}
+            lineIndex={index}
+          ></Line>
+        );
+      })}
 
-        <hr className="p-4" />
-        <button
-          onClick={evaluateGuess}
-          className="uppercase p-4 text-white bg-blue-500 rounded"
-          style={canSubmit ? { display: "block" } : { display: "none" }}
-        >
-          Submit
-        </button>
-        <div
-          className="p-4"
-          style={
-            gameState == "LOST" ? { display: "block" } : { display: "none" }
+      <hr className="p-1" />
+      <div className="flex max-w-xs flex-wrap justify-center">
+        {keyboard.map(
+          (abc: { letter: string; validation: string }, index: number) => {
+            return (
+              <div
+                key={abc.letter + "__" + index}
+                className={
+                  "bg-white rounded text-center text-lg w-5 m-1 " + abc.validation
+                }
+              >
+                {abc.letter}
+              </div>
+            );
           }
-        >
-          <p className="text-center">Bad luck!</p>
-          <p>The solution was:</p>
-          <p className="text-center">{solution}</p>
-        </div>
-        <div
-          className="p-4"
-          style={
-            gameState == "WON" ? { display: "block" } : { display: "none" }
-          }
-        >
-          <p className="text-center">You won!</p>
-        </div>
-        <button
-          onClick={refreshPage}
-          className="uppercase p-4 text-white bg-green-500 rounded"
-          style={gameState == "" ? { display: "none" } : { display: "block" }}
-        >
-          New word
-        </button>
-        <div className="p-4 text-red-500 text-center">{errorMessage}</div>
+        )}
       </div>
+      <hr className="p-1" />
+      <button
+        onClick={evaluateGuess}
+        className="uppercase p-1 text-white bg-blue-500 rounded"
+        style={canSubmit ? { display: "block" } : { display: "none" }}
+      >
+        Submit
+      </button>
+      <div
+        className="p-4"
+        style={gameState == "LOST" ? { display: "block" } : { display: "none" }}
+      >
+        <p className="text-center">Bad luck!</p>
+        <p>The solution was:</p>
+        <p className="text-center">{solution}</p>
+      </div>
+      <div
+        className="p-4"
+        style={gameState == "WON" ? { display: "block" } : { display: "none" }}
+      >
+        <p className="text-center">You won!</p>
+      </div>
+      <button
+        onClick={refreshPage}
+        className="uppercase p-4 text-white bg-green-500 rounded"
+        style={gameState == "" ? { display: "none" } : { display: "block" }}
+      >
+        New word
+      </button>
+      <div className="p-4 text-red-500 text-center">{errorMessage}</div>
     </div>
   );
 }
