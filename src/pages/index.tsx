@@ -44,9 +44,10 @@ function Home() {
       .then((res) => res.json())
       .then((res) => {
         console.log(res)
-        if (res[0].title == "No Definitions Found") {
-          isValid = false;
-          onError("That's not a word!");
+        if (res) {
+          if (res.title == "No Definitions Found") {
+            isValid = false;
+          }
         }
       });
     return isValid;
@@ -62,8 +63,9 @@ function Home() {
 
     // check dictionary
     let isRealWord = checkWord(guessString);
-    console.log(isRealWord);
+    //console.log(isRealWord);
     if (!isRealWord) {
+      onError("That's not a word!");
       return;
     }
 
@@ -100,6 +102,15 @@ function Home() {
       setGameState("LOST");
       return;
     }
+
+    // move focus to next line
+    let nextLineInput = document.getElementById(
+      "line_" + (activeLine + 1) + "_letter_0"
+    );
+    console.log(nextLineInput);
+    if (nextLineInput) {
+      nextLineInput.focus();
+    }
   };
 
   return (
@@ -117,6 +128,7 @@ function Home() {
             key={"line_+" + index}
             validation={config}
             onSubmitToggle={onSubmitToggle}
+            evaluateGuess={evaluateGuess}
             isLineActive={isLineActive}
             lineIndex={index}
           ></Line>
