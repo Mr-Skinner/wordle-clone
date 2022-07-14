@@ -157,7 +157,7 @@ function Home() {
       <div className="flex max-w-xs flex-wrap justify-center absolute left-1/4">
       {keyboard.map((abc: {letter: string, validation: string}, index: number) => {
           return (
-            <div className={"bg-white rounded text-center w-5 m-1 " + abc.validation}>
+            <div key={abc.letter + '__' + index} className={"bg-white rounded text-center w-5 m-1 " + abc.validation}>
               {abc.letter}
             </div>
           );
