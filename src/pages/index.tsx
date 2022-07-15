@@ -1,5 +1,8 @@
 import { useState, useEffect } from "react";
+
 import "tailwindcss/tailwind.css";
+
+import Confetti from 'react-dom-confetti';
 import Line from "../components/line";
 import wordsArray from "../words.js";
 
@@ -10,6 +13,7 @@ function Home() {
   const [activeLine, setActiveLine] = useState<number>(0);
   const [errorMessage, setErrorMessage] = useState("");
   const [gameState, setGameState] = useState("");
+  const [confetti, setConfetti] = useState(false);
   const [validateConfig, setValidateConfig] = useState<any>([
     [null],
     [null],
@@ -134,6 +138,7 @@ function Home() {
 
     if (solution == guessString) {
       setGameState("WON");
+      setConfetti(true);
       return;
     }
 
@@ -156,6 +161,7 @@ function Home() {
     <div className="flex flex-col max-w-screen-md items-center p-4 text-5xl text-slate-700 m-auto">
       <hr className="p-1" />
       <h1>Wordle!</h1>
+      <Confetti active={ confetti } />
       <hr className="p-1" />
       {validateConfig.map((config: [], index: number) => {
         let isLineActive = false;
