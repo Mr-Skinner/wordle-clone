@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 
 import "tailwindcss/tailwind.css";
 
-import Confetti from 'react-dom-confetti';
+import Confetti from "react-dom-confetti";
 import Line from "../components/line";
 import wordsArray from "../words.js";
 
@@ -20,7 +20,7 @@ function Home() {
     [null],
     [null],
     [null],
-    [null]
+    [null],
   ]);
 
   const [keyboard, setKeyboard] = useState([
@@ -61,11 +61,11 @@ function Home() {
     let nextLineInput = document.getElementById(
       "line_" + activeLine + "_letter_0"
     );
-    console.log(nextLineInput);
+    //console.log(nextLineInput);
     if (nextLineInput) {
       nextLineInput.focus();
     }
-  }, [activeLine])
+  }, [activeLine]);
 
   //console.log(solution);
 
@@ -83,19 +83,24 @@ function Home() {
     }, 2000);
   };
 
-  function checkWord(word: string): boolean {
-    let isValid = true;
-    fetch("https://api.dictionaryapi.dev/api/v2/entries/en/" + word)
+  function checkWord(word: string) {
+    return fetch("https://api.dictionaryapi.dev/api/v2/entries/en/" + word)
       .then((res) => res.json())
       .then((res) => {
         //console.log(res);
-        if (res) {
-          if (res.title == "No Definitions Found") {
-            isValid = false;
+
+        if (res[0] !== undefined) {
+          if (res[0].hasOwnProperty("word")) {
+            //console.log("YES");
+            return true;
           }
         }
+
+        if (res.title == "No Definition Found") {
+          console.log("NO");
+          return false;
+        }
       });
-    return isValid;
   }
 
   const refreshPage = () => {
@@ -106,18 +111,18 @@ function Home() {
     duration: 2000,
   };
 
-  const evaluateGuess = () => {
+  async function evaluateGuess() {
     let validation: any[] = [];
     let guessString = guess.join("");
 
     // check dictionary
-    let isRealWord = checkWord(guessString);
-    //console.log(isRealWord);
-    if (!isRealWord) {
+    let isWord = await checkWord(guessString);
+    //console.log(isWord);
+
+    if (!isWord) {
       onError("That's not a word!");
       return;
     }
-
     if (!wordsArray.includes(guessString)) {
       onError("That word isn't in our database, sorry!");
       return;
@@ -139,7 +144,9 @@ function Home() {
       });
 
       if (filteredLetter) {
-        if (filteredLetter.validation != "correct" ) {filteredLetter.validation = isCorrect;}
+        if (filteredLetter.validation != "correct") {
+          filteredLetter.validation = isCorrect;
+        }
       }
       setKeyboard(alphabet);
 
@@ -156,6 +163,10 @@ function Home() {
     if (solution == guessString) {
       setGameState("WON");
       setConfetti(true);
+
+      // disable all inputs
+      setActiveLine(-1);
+
       return;
     }
 
@@ -163,9 +174,7 @@ function Home() {
       setGameState("LOST");
       return;
     }
-
-    
-  };
+  }
 
   return (
     <div className="flex flex-col max-w-screen-md items-center p-4 text-5xl text-slate-700 m-auto">
@@ -197,7 +206,8 @@ function Home() {
               <div
                 key={abc.letter + "__" + index}
                 className={
-                  "bg-white rounded text-center text-lg w-6 m-1 shadow-md shadow-slate-400 " + abc.validation
+                  "bg-white rounded text-center text-lg w-6 m-1 shadow-md shadow-slate-400 " +
+                  abc.validation
                 }
               >
                 {abc.letter}
@@ -207,7 +217,7 @@ function Home() {
         )}
       </div>
       <hr className="p-1" />
-      <Confetti config={ confettiConfig } active={ confetti } />
+      <Confetti config={confettiConfig} active={confetti} />
       <button
         onClick={evaluateGuess}
         className="uppercase p-1 text-white bg-blue-500 rounded"
