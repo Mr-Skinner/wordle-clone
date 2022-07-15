@@ -20,6 +20,7 @@ function Home() {
     [null],
     [null],
     [null],
+    [null]
   ]);
 
   const [keyboard, setKeyboard] = useState([
