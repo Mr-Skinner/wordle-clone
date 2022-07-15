@@ -102,6 +102,10 @@ function Home() {
     window.location.reload();
   };
 
+  const confettiConfig = {
+    duration: 2000,
+  };
+
   const evaluateGuess = () => {
     let validation: any[] = [];
     let guessString = guess.join("");
@@ -155,7 +159,7 @@ function Home() {
       return;
     }
 
-    if (solution !== guessString && activeLine > 3) {
+    if (solution !== guessString && activeLine > 4) {
       setGameState("LOST");
       return;
     }
@@ -167,7 +171,6 @@ function Home() {
     <div className="flex flex-col max-w-screen-md items-center p-4 text-5xl text-slate-700 m-auto">
       <hr className="p-1" />
       <h1>Wordle!</h1>
-      <Confetti active={ confetti } />
       <hr className="p-1" />
       {validateConfig.map((config: [], index: number) => {
         let isLineActive = false;
@@ -204,6 +207,7 @@ function Home() {
         )}
       </div>
       <hr className="p-1" />
+      <Confetti config={ confettiConfig } active={ confetti } />
       <button
         onClick={evaluateGuess}
         className="uppercase p-1 text-white bg-blue-500 rounded"
