@@ -37,6 +37,7 @@ function Home() {
     { letter: "K", validation: "" },
     { letter: "L", validation: "" },
     { letter: "M", validation: "" },
+    { letter: "N", validation: "" },
     { letter: "O", validation: "" },
     { letter: "P", validation: "" },
     { letter: "Q", validation: "" },
@@ -54,6 +55,17 @@ function Home() {
   useEffect(() => {
     setSolution(wordsArray[Math.floor(Math.random() * wordsArray.length) + 1]);
   }, []);
+
+  useEffect(() => {
+    // move focus to next line
+    let nextLineInput = document.getElementById(
+      "line_" + activeLine + "_letter_0"
+    );
+    console.log(nextLineInput);
+    if (nextLineInput) {
+      nextLineInput.focus();
+    }
+  }, [activeLine])
 
   //console.log(solution);
 
@@ -148,14 +160,7 @@ function Home() {
       return;
     }
 
-    // move focus to next line
-    let nextLineInput = document.getElementById(
-      "line_" + (activeLine + 1) + "_letter_0"
-    );
-    //console.log(nextLineInput);
-    if (nextLineInput) {
-      nextLineInput.focus();
-    }
+    
   };
 
   return (
