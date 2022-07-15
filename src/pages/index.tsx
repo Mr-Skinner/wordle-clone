@@ -122,7 +122,7 @@ function Home() {
       });
 
       if (filteredLetter) {
-        filteredLetter.validation = isCorrect;
+        if (filteredLetter.validation != "correct" ) {filteredLetter.validation = isCorrect;}
       }
       setKeyboard(alphabet);
 
