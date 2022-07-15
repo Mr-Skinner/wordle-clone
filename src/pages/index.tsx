@@ -188,7 +188,7 @@ function Home() {
               <div
                 key={abc.letter + "__" + index}
                 className={
-                  "bg-white rounded text-center text-lg w-5 m-1 " + abc.validation
+                  "bg-white rounded text-center text-lg w-6 m-1 shadow-md shadow-slate-400 " + abc.validation
                 }
               >
                 {abc.letter}

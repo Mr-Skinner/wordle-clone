@@ -66,11 +66,6 @@ function Line({
     let intLetterIndex: number = parseInt(letterIndex.split("_")[3]);
     //console.log(letterInput, keyCode, letterIndex);
     //console.log(guesses);
-    if (keyCode == 8) {
-      // remove any current letter guess at that index
-      guesses[intLetterIndex] = null;
-      onSubmitToggle(false);
-    }
 
     if (letterInput.match("^[a-zA-Z]{1}$")) {
       guesses[intLetterIndex] = letterInput.toUpperCase();
@@ -86,7 +81,8 @@ function Line({
       }
     }
 
-    if (keyCode == 8 && intLetterIndex > 0) {
+    if (keyCode == 8 && intLetterIndex > 0 && guesses[intLetterIndex] == null) {
+      onSubmitToggle(false);
       let prevInput = document.getElementById(
         "line_" + lineIndex + "_letter_" + (intLetterIndex - 1)
       );
@@ -94,6 +90,12 @@ function Line({
         prevInput.focus();
         return
       }
+    }
+
+    if (keyCode == 8) {
+      // remove any current letter guess at that index
+      guesses[intLetterIndex] = null;
+      onSubmitToggle(false);
     }
 
     if (!guesses.includes(null) && guesses.length == 5) {
@@ -122,7 +124,7 @@ function Line({
               type="text"
               disabled={isLineActive ? false : true}
               className={
-                "w-12 h-full text-center align-middle rounded focus-within:outline-none uppercase bg-transparent caret-transparent focus:shadow-lg shadow-slate-800"
+                "w-12 h-full text-center align-middle rounded focus-within:outline outline-slate-500 uppercase bg-transparent caret-transparent shadow-md shadow-slate-400"
               }
               maxLength={1}
               size={1}
